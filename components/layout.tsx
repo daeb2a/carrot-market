@@ -25,7 +25,7 @@ export default function Layout({
       <div
         className={cls(
           !canGoBack ? "justify-center" : "",
-          "bg-white w-full max-w-xl text-lg px-10 font-medium py-3 fixed text-gray-800 border-b top-0  flex items-center"
+          "bg-white w-full max-w-lg text-lg px-10 font-medium py-3 fixed text-gray-800 border-b top-0  flex items-center"
         )}
       >
         {canGoBack ? (
@@ -50,9 +50,9 @@ export default function Layout({
       </div>
       <div className={cls("pt-12", hasTabBar ? "pb-24" : "")}>{children}</div>
       {hasTabBar ? (
-        <nav className="bg-white max-w-xl text-gray-700 border-t fixed bottom-0 w-full px-10 pb-5 pt-3 flex justify-between text-xs">
+        <nav className="bg-white max-w-lg text-gray-700 border-t fixed bottom-0 w-full flex justify-between text-xs">
           <Link href="/" legacyBehavior>
-            <a className="flex flex-col items-center space-y-2">
+            <a className="flex flex-col items-center space-y-2 w-1/5 pb-5 pt-3 hover:bg-gray-50">
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -71,7 +71,7 @@ export default function Layout({
             </a>
           </Link>
           <Link href="/community" legacyBehavior>
-            <a className="flex flex-col items-center space-y-2">
+            <a className="flex flex-col items-center space-y-2 w-1/5 pb-5 pt-3 hover:bg-gray-50">
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -90,7 +90,7 @@ export default function Layout({
             </a>
           </Link>
           <Link href="/chats" legacyBehavior>
-            <a className="flex flex-col items-center space-y-2">
+            <a className="flex flex-col items-center space-y-2 w-1/5 pb-5 pt-3 hover:bg-gray-50">
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -109,7 +109,7 @@ export default function Layout({
             </a>
           </Link>
           <Link href="/streams" legacyBehavior>
-            <a className="flex flex-col items-center space-y-2">
+            <a className="flex flex-col items-center space-y-2 w-1/5 pb-5 pt-3 hover:bg-gray-50">
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -128,7 +128,7 @@ export default function Layout({
             </a>
           </Link>
           <Link href="/profile" legacyBehavior>
-            <a className="flex flex-col items-center space-y-2">
+            <a className="flex flex-col items-center space-y-2 w-1/5 pb-5 pt-3 hover:bg-gray-50">
               <svg
                 className="w-6 h-6"
                 fill="none"
