@@ -25,8 +25,8 @@ const Upload: NextPage = () => {
           <input className="hidden" type="file" />
         </label>
       </div>
-      <Input title="Name" name="name" placeholder="상품명" required />
-      <Input title="Price" name="price" kind="price" placeholder="0" required />
+      <Input title="Name" name="name" required />
+      <Input title="Price" name="price" kind="price" required />
       <TextArea label="Description" name="description" required />
       <Button text="Upload Item" />
     </div>
