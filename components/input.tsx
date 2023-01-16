@@ -13,8 +13,8 @@ export default function Input({
   title,
   name,
   kind = "text",
-  register,
   type,
+  register,
   required,
 }: InputProps) {
   return (
