@@ -20,7 +20,7 @@ interface ItemDetailResponse {
   isLiked: boolean;
 }
 
-const ItemDetail: NextPage = () => {
+const ItemDetail: NextPage = () => { 
   // const { user, isLoading } = useUser();
   // const { mutate } = useSWRConfig();
   const router = useRouter();
