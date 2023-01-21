@@ -49,7 +49,7 @@ export default function Enter() {
       router.push("/");
     }
   }, [tokenData, router])
-  console.log(data);
+  // console.log(data);
   return (
     <div className="mt-16 mx-8">
       <h3 className="text-3xl font-bold text-center">Enter to Carrot</h3>
