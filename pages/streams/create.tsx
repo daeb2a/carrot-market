@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 
 interface CreateStreamResponse {
   ok: boolean;
-  stream: Stream
+  stream: Stream;
 }
 
 interface CreateStreamForm {
@@ -44,7 +44,7 @@ const Create: NextPage = () => {
           type="text"
         />
         <Input
-          register={register("price", { required: true })}
+          register={register("price", { required: true, valueAsNumber: true })}
           required
           title="Price"
           name="price"
