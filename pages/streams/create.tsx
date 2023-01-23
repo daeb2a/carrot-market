@@ -5,9 +5,9 @@ import Layout from "@components/layout";
 import TextArea from "@components/textarea";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
-import { Stream } from "stream";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Stream } from "@prisma/client";
 
 interface CreateStreamResponse {
   ok: boolean;
