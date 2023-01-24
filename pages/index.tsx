@@ -36,6 +36,7 @@ const Home: NextPage = () => {
             price={product.price}
             comments={1}
             hearts={product._count.favs}
+            photo={product.image}
           />
         ))}
         <FloatingButton href="/products/upload">
