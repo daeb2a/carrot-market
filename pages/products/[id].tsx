@@ -46,7 +46,11 @@ const ItemDetail: NextPage = () => {
                 alt="product-image"
                 src={`https://imagedelivery.net/CdguhYdexlvfH1-rcOqNBg/${data.product.image}/public`}
                 className="bg-slate-300 object-cover"
-                layout="fill"
+                fill={true}
+                sizes="(max-width: 768px) 100vw,
+                      (max-width: 1200px) 100vw,
+                      100vw"
+                priority={true}  
               />
             </div>
           ) : (
