@@ -41,10 +41,14 @@ const ItemDetail: NextPage = () => {
       <div className="px-4 py-4">
         <div className="mb-8">
           {data?.product?.image ? (
-            <img
-              src={`https://imagedelivery.net/CdguhYdexlvfH1-rcOqNBg/${data.product.image}/public`}
-              className="h-96 bg-slate-300"
-            />
+            <div className="relative pb-96">
+              <Image
+                alt="product-image"
+                src={`https://imagedelivery.net/CdguhYdexlvfH1-rcOqNBg/${data.product.image}/public`}
+                className="bg-slate-300 object-cover"
+                layout="fill"
+              />
+            </div>
           ) : (
             <div className="h-96 bg-slate-300" />
           )}
