@@ -9,6 +9,7 @@ import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
 import useUser from "@libs/client/useUser";
 import Image from "next/image";
+import { useEffect } from "react";
 
 interface ProductWithUser extends Product {
   user: User;
@@ -21,9 +22,16 @@ interface ItemDetailResponse {
   isLiked: boolean;
 }
 
+interface ChatRoomResponse {
+  ok: boolean;
+  chatRoomId: string;
+}
+
+
 const ItemDetail: NextPage = () => { 
   // const { user, isLoading } = useUser();
   // const { mutate } = useSWRConfig();
+
   const router = useRouter();
   const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
@@ -35,7 +43,21 @@ const ItemDetail: NextPage = () => {
     toggleFav({});
     // mutate("/api/users/me", (prev: any) => ({ ok: !prev.ok }), false); // unbound mutation
     // mutate("/api/users/me"); // simple refetch
-  } 
+  }
+  const [createChatRoom, { data: chatRoomData, loading }] =
+    useMutation<ChatRoomResponse>(
+      `/api/chats?productId=${data?.product.id}&invitedId=${data?.product.userId}`
+    );
+  const onTalkToSellerClick = () => {
+    if (loading) return;
+    createChatRoom({});
+    console.log(chatRoomData);
+  }; 
+  useEffect(() => {
+    if (chatRoomData && chatRoomData.ok) {
+      router.push(`/chats/${chatRoomData.chatRoomId}`);
+    }
+  }, [chatRoomData, router]);
   return (
     <Layout canGoBack>
       <div className="px-4 py-4">
@@ -50,7 +72,7 @@ const ItemDetail: NextPage = () => {
                 sizes="(max-width: 768px) 100vw,
                       (max-width: 1200px) 100vw,
                       100vw"
-                priority={true}  
+                priority={true}
               />
             </div>
           ) : (
@@ -87,11 +109,15 @@ const ItemDetail: NextPage = () => {
               {data?.product?.name}
             </h1>
             <span className="text-2xl block mt-3 text-gray-900">
-              ${data?.product?.price}
+              ￦{data?.product?.price}
             </span>
             <p className=" my-6 text-gray-700">{data?.product?.description}</p>
             <div className="flex items-center justify-between space-x-2">
-              <Button large text="Talk to Seller" />
+              <Button
+                large
+                text="Talk to Seller"
+                onClick={onTalkToSellerClick}
+              />
               <button
                 onClick={onFavClick}
                 className={cls(
