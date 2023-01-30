@@ -4,6 +4,7 @@ import useSWR from "swr";
 import { Post, User } from "@prisma/client";
 import useCoords from "@libs/client/useCoords";
 import Link from "next/link";
+import FloatingButton from "@components/floating-button";
 
 interface PostWithUser extends Post {
   user: User;
@@ -83,7 +84,7 @@ const Community: NextPage = () => {
             </a>
           </Link>
         ))}
-        <button className="fixed hover:bg-orange-500 transition-colors cursor-pointer  bottom-24 right-5 shadow-xl bg-orange-400 rounded-full p-4 text-white">
+        <FloatingButton href="/community/write">
           <svg
             className="w-6 h-6"
             fill="none"
@@ -98,7 +99,7 @@ const Community: NextPage = () => {
               d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
             ></path>
           </svg>
-        </button>
+        </FloatingButton>
       </div>
     </Layout>
   );
