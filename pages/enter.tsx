@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Button from "@components/button";
 import Input from "@components/input";
 import useMutation from "@libs/client/useMutation";
@@ -8,7 +8,13 @@ import router from "next/router";
 import dynamic from "next/dynamic";
 // import Bs from "@components/bs";
 
-const Bs = dynamic(() => import("@components/bs"), { ssr: false });
+const Bs = dynamic(
+  () =>
+    new Promise((resolve) =>
+      setTimeout(() => resolve(import("@components/bs")), 10000)
+    ),
+  { ssr: false, suspense: true, /* loading: () => <span>loading</span> */ }
+);
 
 interface EnterForm {
   email?: string;
@@ -43,16 +49,16 @@ export default function Enter() {
   const onValid = (validForm: EnterForm) => {
     if (loading) return;
     enter(validForm);
-  }
+  };
   const onTokenValid = (validForm: TokenForm) => {
-    if(tokenLoading) return;
+    if (tokenLoading) return;
     confirmToken(validForm);
   };
   useEffect(() => {
-    if(tokenData?.ok) {
+    if (tokenData?.ok) {
       router.push("/");
     }
-  }, [tokenData, router])
+  }, [tokenData, router]);
   // console.log(data);
   return (
     <div className="mt-16 mx-8">
@@ -125,7 +131,9 @@ export default function Enter() {
                 ) : null}
                 {method === "phone" ? (
                   <>
-                    <Bs />
+                    <Suspense fallback={<button>suspense loading!!</button>}>
+                      <Bs />
+                    </Suspense>
                     <Input
                       register={register("phone")}
                       title="Phone Number"
@@ -186,4 +194,4 @@ export default function Enter() {
       </div>
     </div>
   );
-};
+}
