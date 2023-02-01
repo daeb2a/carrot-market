@@ -5,6 +5,7 @@ import useUser from "@libs/client/useUser";
 import { useRouter } from "next/router";
 
 export default function App({ Component, pageProps }: AppProps) {
+  console.log("APP IS RUNNING");
   const router = useRouter();
   const CheckUserLoggedIn = () => {
     router.pathname === "/enter"
