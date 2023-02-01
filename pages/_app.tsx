@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <CheckUserLoggedIn />
         <Component {...pageProps} />
       </div>
-      <Script
+      {/* <Script
         src="https://developers.kakao.com/sdk/js/kakao.js"
         strategy="lazyOnload"
       />
@@ -42,7 +42,7 @@ export default function App({ Component, pageProps }: AppProps) {
             });
           };
         }}
-      />
+      /> */}
     </SWRConfig>
   );
 }
