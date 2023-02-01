@@ -3,6 +3,7 @@ import type { AppProps } from "next/app"
 import { SWRConfig } from "swr";
 import useUser from "@libs/client/useUser";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
 export default function App({ Component, pageProps }: AppProps) {
   console.log("APP IS RUNNING");
@@ -25,6 +26,23 @@ export default function App({ Component, pageProps }: AppProps) {
         <CheckUserLoggedIn />
         <Component {...pageProps} />
       </div>
+      <Script
+        src="https://developers.kakao.com/sdk/js/kakao.js"
+        strategy="lazyOnload"
+      />
+      <Script
+        src="https://connect.facebook.net/en_US/sdk.js"
+        onLoad={() => {
+          window.fbAsyncInit = function () {
+            FB.init({
+              appId: "your-app-id",
+              autoLogAppEvents: true,
+              xfbml: true,
+              version: "v13.0",
+            });
+          };
+        }}
+      />
     </SWRConfig>
   );
 }

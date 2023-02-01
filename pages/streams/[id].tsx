@@ -71,7 +71,7 @@ const StreamPage: NextPage = () => {
     sendMessage(form);
   };
   return (
-    <Layout canGoBack>
+    <Layout canGoBack title="스트리밍" seoTitle="스트리밍">
       <div className="py-10 px-4 space-y-4">
         {/* {data?.stream.cloudflareId ? (
           <iframe

@@ -59,7 +59,7 @@ const Upload: NextPage = () => {
     }
   }, [photo])
   return (
-    <Layout canGoBack title="Upload Product">
+    <Layout canGoBack title="Upload Product" seoTitle="상품 올리기">
       <form className="px-4 py-10 space-y-5" onSubmit={handleSubmit(onValid)}>
         <div>
           {photoPreview ? (

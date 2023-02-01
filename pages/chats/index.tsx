@@ -21,7 +21,7 @@ const Chats: NextPage = () => {
   const router = useRouter();
   const { data } = useSWR<ChatRoomsResponse>(`/api/chats/`);
   return (
-    <Layout hasTabBar title="채팅">
+    <Layout hasTabBar title="채팅" seoTitle="채팅">
       <div className="divide-y-[1px] ">
         {data?.chatRooms.map((chatRoom) => (
           <Link legacyBehavior key={chatRoom.id} href={`/chats/${chatRoom.id}`}>
