@@ -8,12 +8,12 @@ import Script from "next/script";
 export default function App({ Component, pageProps }: AppProps) {
   console.log("APP IS RUNNING");
   const router = useRouter();
-  const CheckUserLoggedIn = () => {
+  /* const CheckUserLoggedIn = () => {
     router.pathname === "/enter"
     ? ""
     : useUser(); 
     return null;
-  }
+  } */
   return (
     <SWRConfig
       value={{
@@ -23,7 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
       }}
     >
       <div className="w-full max-w-lg mx-auto bg-white">
-        <CheckUserLoggedIn />
+        {/* <CheckUserLoggedIn /> */}
         <Component {...pageProps} />
       </div>
       {/* <Script

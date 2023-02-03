@@ -46,6 +46,7 @@ const Review: NextPage = () => {
           register={register("score", {
             required: true,
             pattern: /^[1-5]+$/,
+            minLength: 1,
             maxLength: 1,
             valueAsNumber: true,
           })}

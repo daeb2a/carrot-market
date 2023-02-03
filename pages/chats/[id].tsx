@@ -70,7 +70,11 @@ const ChatDetail: NextPage = () => {
     );
   }
   return (
-    <Layout title={messageData?.chatRoom.invited.name} canGoBack>
+    <Layout
+      title={messageData?.chatRoom.invited.name}
+      seoTitle={messageData?.chatRoom.invited.name}
+      canGoBack
+    >
       <div className="border-y-[1px]">
         {isReserve ? (
           <div className="flex space-x-2">

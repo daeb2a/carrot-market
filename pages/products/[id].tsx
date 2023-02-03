@@ -62,11 +62,18 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
       router.push(`/chats/${chatRoomData.chatRoomId}`);
     }
   }, [chatRoomData, router]);
+  if (router.isFallback) {
+    return (
+      <Layout title="Loaidng for youuuuuuu" seoTitle="Loaidng for youuuuuuu">
+        <span>I love you</span>
+      </Layout>
+    );
+  }
   return (
-    <Layout canGoBack>
+    <Layout title="상품목록" seoTitle="상품목록" canGoBack>
       <div className="px-4 py-4">
         <div className="mb-8">
-          {data?.product?.image ? (
+          {product?.image ? (
             <div className="relative pb-96">
               <Image
                 alt="product-image"
@@ -83,7 +90,7 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
             <div className="h-96 bg-slate-300" />
           )}
           <div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">
-            {data?.product?.image ? (
+            {product?.image ? (
               <Image
                 alt="user-profile"
                 width={48}
@@ -165,8 +172,12 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
           <h2 className="text-2xl font-bold text-gray-900">Similar items</h2>
           <div className=" mt-6 grid grid-cols-2 gap-4">
             {relatedProducts.map((product) => (
-              <Link href={`/products/${product.id}`} legacyBehavior>
-                <a key={product.id}>
+              <Link
+                key={product.id}
+                href={`/products/${product.id}`}
+                legacyBehavior
+              >
+                <a>
                   <div className="h-56 w-full mb-4 bg-slate-300" />
                   <h3 className="text-gray-700 -mb-1">{product.name}</h3>
                   <span className="text-sm font-medium text-gray-900">
@@ -185,7 +196,7 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
 export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [],
-    fallback: "blocking",
+    fallback: true,
   };
 };
 
