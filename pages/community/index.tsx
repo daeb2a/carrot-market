@@ -106,12 +106,12 @@ const Community: NextPage<PostsResponse> = ({posts}) => {
 };
 
 export async function getStaticProps() {
+  console.log("Community ISR");
   const posts = await client.post.findMany({ include: { user: true } });
   return {
     props: {
       posts: JSON.parse(JSON.stringify(posts)),
     },
-    revalidate: 20,
   };
 }
 
