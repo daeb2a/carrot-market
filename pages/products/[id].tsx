@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Button from "@components/button";
 import Layout from "@components/layout";
 import { useRouter } from "next/router";
@@ -10,6 +10,7 @@ import { cls } from "@libs/client/utils";
 import useUser from "@libs/client/useUser";
 import Image from "next/image";
 import { useEffect } from "react";
+import client from "@libs/server/client";
 
 interface ProductWithUser extends Product {
   user: User;
@@ -27,8 +28,11 @@ interface ChatRoomResponse {
   chatRoomId: string;
 }
 
-
-const ItemDetail: NextPage = () => { 
+const ItemDetail: NextPage<ItemDetailResponse> = ({
+  product,
+  relatedProducts,
+  isLiked,
+}) => {
   // const { user, isLoading } = useUser();
   // const { mutate } = useSWRConfig();
 
@@ -43,16 +47,16 @@ const ItemDetail: NextPage = () => {
     toggleFav({});
     // mutate("/api/users/me", (prev: any) => ({ ok: !prev.ok }), false); // unbound mutation
     // mutate("/api/users/me"); // simple refetch
-  }
+  };
   const [createChatRoom, { data: chatRoomData, loading }] =
     useMutation<ChatRoomResponse>(
-      `/api/chats?productId=${data?.product.id}&invitedId=${data?.product.userId}`
+      `/api/chats?productId=${product.id}&invitedId=${product.userId}`
     );
   const onTalkToSellerClick = () => {
     if (loading) return;
     createChatRoom({});
     console.log(chatRoomData);
-  }; 
+  };
   useEffect(() => {
     if (chatRoomData && chatRoomData.ok) {
       router.push(`/chats/${chatRoomData.chatRoomId}`);
@@ -66,7 +70,7 @@ const ItemDetail: NextPage = () => {
             <div className="relative pb-96">
               <Image
                 alt="product-image"
-                src={`https://imagedelivery.net/CdguhYdexlvfH1-rcOqNBg/${data.product.image}/public`}
+                src={`https://imagedelivery.net/CdguhYdexlvfH1-rcOqNBg/${product.image}/public`}
                 className="bg-slate-300 object-cover"
                 fill={true}
                 sizes="(max-width: 768px) 100vw,
@@ -84,7 +88,7 @@ const ItemDetail: NextPage = () => {
                 alt="user-profile"
                 width={48}
                 height={48}
-                src={`https://imagedelivery.net/CdguhYdexlvfH1-rcOqNBg/${data.product.user.avatar}/public`}
+                src={`https://imagedelivery.net/CdguhYdexlvfH1-rcOqNBg/${product.user.avatar}/public`}
                 className="w-12 h-12 rounded-full bg-slate-300"
               />
             ) : (
@@ -92,11 +96,11 @@ const ItemDetail: NextPage = () => {
             )}
             <div>
               <p className="text-sm font-medium text-gray-700">
-                {data?.product?.user?.name}
+                {product?.user?.name}
               </p>
               <Link
                 legacyBehavior
-                href={`/users/profiles/${data?.product?.user?.id}`}
+                href={`/users/profiles/${product?.user?.id}`}
               >
                 <a className="text-xs font-medium text-gray-500">
                   View profile &rarr;
@@ -106,12 +110,12 @@ const ItemDetail: NextPage = () => {
           </div>
           <div className="mt-5">
             <h1 className="text-3xl font-bold text-gray-900">
-              {data?.product?.name}
+              {product?.name}
             </h1>
             <span className="text-2xl block mt-3 text-gray-900">
-              ￦{data?.product?.price}
+              ￦{product?.price}
             </span>
-            <p className=" my-6 text-gray-700">{data?.product?.description}</p>
+            <p className=" my-6 text-gray-700">{product?.description}</p>
             <div className="flex items-center justify-between space-x-2">
               <Button
                 large
@@ -122,12 +126,12 @@ const ItemDetail: NextPage = () => {
                 onClick={onFavClick}
                 className={cls(
                   "p-3 rounded-md flex items-center justify-center hover:bg-gray-100",
-                  data?.isLiked
+                  isLiked
                     ? "text-red-400 hover:text-red-500"
                     : "text-gray-400 hover:text-gray-500"
                 )}
               >
-                {data?.isLiked ? (
+                {isLiked ? (
                   <svg
                     className="h-6 w-6"
                     xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +164,7 @@ const ItemDetail: NextPage = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Similar items</h2>
           <div className=" mt-6 grid grid-cols-2 gap-4">
-            {data?.relatedProducts.map((product) => (
+            {relatedProducts.map((product) => (
               <Link href={`/products/${product.id}`} legacyBehavior>
                 <a key={product.id}>
                   <div className="h-56 w-full mb-4 bg-slate-300" />
@@ -176,6 +180,59 @@ const ItemDetail: NextPage = () => {
       </div>
     </Layout>
   );
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  if (!ctx?.params?.id) {
+    return {
+      props: {},
+    };
+  }
+  const product = await client.product.findUnique({
+    where: {
+      id: +ctx.params.id.toString(),
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+    },
+  });
+  const terms = product?.name.split(" ").map((word) => ({
+    name: {
+      contains: word,
+    },
+  }));
+  const relatedProducts = await client.product.findMany({
+    where: {
+      OR: terms,
+      AND: {
+        id: {
+          not: product?.id,
+        },
+      },
+    },
+  });
+  const isLiked = false;
+  await new Promise((resolve) => setTimeout(resolve, 10000));
+  return {
+    props: {
+      product: JSON.parse(JSON.stringify(product)),
+      relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
+      isLiked,
+    },
+  };
 };
 
 export default ItemDetail;
