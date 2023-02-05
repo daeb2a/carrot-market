@@ -38,7 +38,7 @@ const BillionPerson: NextPage = () => {
         <div className="mt-2 mb-10">
           <h3 className="text-2xl font-bold">{data?.name}</h3>
           <div className="my-5">
-            <p>Networth : {data && Math.round(data?.netWorth / 1000)} Billion</p>
+            <p>Networth : {data && Math.round(data.netWorth / 1000)} Billion</p>
             <p>Country : {data?.country}</p>
             <p>Industries : {data?.industries}</p>
             <p className="my-5">{data?.bio}</p>

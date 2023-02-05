@@ -42,6 +42,7 @@ async function handler(
       },
     });
   }
+  res.revalidate("/community");
   res.json({
     ok: true,
   });

@@ -22,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
           fetch(url).then((response) => response.json()),
       }}
     >
-      <div /* className="w-full max-w-lg mx-auto bg-white" */>
+      <div className="w-full max-w-lg mx-auto bg-white">
         {/* <CheckUserLoggedIn /> */}
         <Component {...pageProps} />
       </div>

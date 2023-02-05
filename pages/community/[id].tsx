@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Button from "@components/button";
 import Layout from "@components/layout";
 import TextArea from "@components/textarea";
@@ -10,6 +10,7 @@ import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import client from "@libs/server/client";
 
 interface AnswerWithUser extends Answer {
   user: User;
@@ -35,17 +36,21 @@ interface AnswerForm {
 }
 
 interface AnswerResponse {
-  ok: OnBeforeUnloadEventHandler;
+  ok: boolean;
   response: Answer;
 }
 
-const CommunityPostDetail: NextPage = () => {
+const CommunityPostDetail: NextPage<CommunityPostResponse> = ({
+  post,
+}) => {
   const router = useRouter();
   const { register, handleSubmit, reset } = useForm<AnswerForm>();
   const { data, mutate } = useSWR<CommunityPostResponse>(
     router.query.id ? `/api/posts/${router.query.id}` : null
   );
-  const [ wonder, { loading } ] = useMutation(`/api/posts/${router.query.id}/wondering`);
+  const [wonder, { loading }] = useMutation(
+    `/api/posts/${router.query.id}/wondering`
+  );
   const [sendAnswer, { data: answerData, loading: answerLoading }] =
     useMutation<AnswerResponse>(`/api/posts/${router.query.id}/answers`);
   const onWonderClick = () => {
@@ -69,11 +74,11 @@ const CommunityPostDetail: NextPage = () => {
     if (!loading) {
       wonder({});
     }
-  }
+  };
   const onValid = (form: AnswerForm) => {
     if (answerLoading) return;
     sendAnswer(form);
-  }
+  };
   useEffect(() => {
     if (answerData && answerData.ok) {
       reset();
@@ -90,9 +95,9 @@ const CommunityPostDetail: NextPage = () => {
           <div className="w-10 h-10 rounded-full bg-slate-300" />
           <div>
             <p className="text-sm font-medium text-gray-700">
-              {data?.post?.user.name}
+              {post?.user.name}
             </p>
-            <Link href={`/users/profiles/${data?.post?.user.id}`} legacyBehavior>
+            <Link href={`/users/profiles/${post?.user.id}`} legacyBehavior>
               <a className="text-xs font-medium text-gray-500">
                 View profile &rarr;
               </a>
@@ -102,10 +107,16 @@ const CommunityPostDetail: NextPage = () => {
         <div>
           <div className="mt-2 px-4 text-gray-700">
             <span className="text-orange-500 font-medium">Q.</span>
-            {data?.post?.question}
+            {post?.question}
           </div>
           <div className="flex px-4 space-x-5 mt-3 text-gray-700 py-2.5 border-t border-b-[2px]  w-full">
-            <button onClick={onWonderClick} className={cls("flex space-x-2 items-center text-sm", data?.isWondering ? "text-green-600" : "")}>
+            <button
+              onClick={onWonderClick}
+              className={cls(
+                "flex space-x-2 items-center text-sm",
+                data?.isWondering ? "text-green-600" : ""
+              )}
+            >
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -142,7 +153,7 @@ const CommunityPostDetail: NextPage = () => {
           </div>
         </div>
         <div className="px-4 my-5 space-y-5">
-          {data?.post?.answers.map((answer) => (
+          {post?.answers.map((answer) => (
             <div key={answer.id} className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-slate-200 rounded-full" />
               <div>
@@ -158,12 +169,70 @@ const CommunityPostDetail: NextPage = () => {
           ))}
         </div>
         <form className="px-4" onSubmit={handleSubmit(onValid)}>
-          <TextArea name="answer" placeholder="Answer this Question!" required register={register("answer", { required: true, minLength: 5 })} />
+          <TextArea
+            name="answer"
+            placeholder="Answer this Question!"
+            required
+            register={register("answer", { required: true, minLength: 5 })}
+          />
           <Button text={answerLoading ? "Loading..." : "Reply"} />
         </form>
       </div>
     </Layout>
   );
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: true,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  if (!ctx?.params?.id) {
+    return {
+      props: {},
+    };
+  }
+  const post = await client.post.findUnique({
+    where: {
+      id: Number(ctx.params.id),
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+      answers: {
+        select: {
+          answer: true,
+          id: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          answers: true,
+          wonderings: true,
+        },
+      },
+    },
+  });
+  return {
+    props: {
+      post: JSON.parse(JSON.stringify(post)),
+    },
+  };
 };
 
 export default CommunityPostDetail;
