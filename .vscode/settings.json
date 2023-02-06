@@ -1,4 +1,6 @@
 {
   "prettier.singleAttributePerLine": false,
-  "editor.formatOnSave": false
+  "editor.formatOnSave": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

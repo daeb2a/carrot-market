@@ -2,9 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    reactRoot: true,
-    runtime: "nodejs",
-    serverComponents: true,
+    appDir: true,
   },
   images: {
     domains: ["imagedelivery.net", "videodelivery.net"],
