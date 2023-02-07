@@ -6,10 +6,6 @@ class CustomDocument extends Document {
     return (
       <Html lang="ko">
         <Head>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
-            rel="stylesheet"
-          />
         </Head>
         <body>
           <Main />
